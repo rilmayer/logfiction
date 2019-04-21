@@ -19,7 +19,7 @@ module Logfiction
       @transitions = []
       @auto_transiton = {}
       @assumptions = {}
-      @access_log = {}  
+      @access_log = {}
       # access_log: user_id & seuquence of states
       # ex.) {user_id1(int):
       #         [{timestamp: timestamp(str),
@@ -321,7 +321,11 @@ module Logfiction
     # Output:
     #   n_actions(int): total number of user's actions
     #   n_sessions: total number of user's sessions
-    def generate_accesslog(n=10000, output_form)
+    def generate_accesslog(n_max, output_form={})
+
+      # initialize access_log
+      @access_log = {}
+
 
       # set default value unless another manual settting done
       if @transitions.size == 0
@@ -337,7 +341,7 @@ module Logfiction
       end
 
       n_row = 1
-      while n_row < n
+      while n_row < n_max
         @users.each do |user|
           user_id = user[:user_id]
           n_actions = 0
@@ -350,10 +354,10 @@ module Logfiction
           end
         end
       end
-      self.output_accesslog(n=10000, output_form={})
+      self.output_accesslog(n_max, output_form)
     end
 
-    def output_accesslog(n=10000, output_form={})
+    def output_accesslog(n_max, output_form)
       # default settings
       output_form = {
         basic_log: [:timestamp, :user_id, :state_id, :items],
@@ -397,7 +401,7 @@ module Logfiction
           end
         end
       end
-      output_accesslogs.sort{|a, b| a[:timestamp] <=> b[:timestamp]}
+      output_accesslogs.sort{|a, b| a[:timestamp] <=> b[:timestamp]}[0,n_max]
     end
 
     def export_logfile(n_max=10000, filetype='CSV', filepath='./fiction_log.csv')
