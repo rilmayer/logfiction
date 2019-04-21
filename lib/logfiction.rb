@@ -321,11 +321,15 @@ module Logfiction
     # Output:
     #   n_actions(int): total number of user's actions
     #   n_sessions: total number of user's sessions
-    def generate_accesslog(n_max, output_form={})
-
+    def generate_accesslog(n, output_form={})
+      # add row number because of "false" log is not counted
+      if n < 5000
+        n_max = n * 2
+      else
+        n_max = n + (n/4)
+      end
       # initialize access_log
       @access_log = {}
-
 
       # set default value unless another manual settting done
       if @transitions.size == 0
@@ -351,10 +355,13 @@ module Logfiction
           while n_actions < user_max_actions && n_sessions < user_max_sessions
             n_actions, n_sessions = self.update_user_state(user_id)
             n_row += 1
+            break if n_row > n_max
           end
+          break if n_row > n_max
         end
+        break if n_row > n_max
       end
-      self.output_accesslog(n_max, output_form)
+      self.output_accesslog(n, output_form)
     end
 
     def output_accesslog(n_max, output_form)
