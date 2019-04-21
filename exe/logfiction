@@ -7,5 +7,8 @@ filepath='./fictionlog.csv'
 
 n = ARGV[0] if ARGV[1]
 filepath = ARGV[1] if ARGV[1]
+
 la = Logfiction::AccessLog.new()
-la.export_logfile(n=n, filetype='CSV',filepath=filepath)
+la.export_logfile(n=n.to_i, filetype='CSV',filepath=filepath)
+
+puts("fictionlog file has exported to: #{filepath}.")
