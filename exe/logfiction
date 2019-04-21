@@ -1,8 +1,11 @@
 #!/usr/bin/env ruby
 
 require 'logfiction'
-n = ARGV[0]
-path = ARGV[1] if ARGV[1]
+
+n = 1000
+filepath='./fictionlog.csv'
+
+n = ARGV[0] if ARGV[1]
+filepath = ARGV[1] if ARGV[1]
 la = Logfiction::AccessLog.new()
-la.generate_accesslog(n)
-la.export_logfile(filetype='CSV',filepath='./fictionlog.csv')
+la.export_logfile(n=n, filetype='CSV',filepath=filepath)

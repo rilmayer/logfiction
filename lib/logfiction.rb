@@ -411,8 +411,8 @@ module Logfiction
       output_accesslogs.sort{|a, b| a[:timestamp] <=> b[:timestamp]}[0,n_max]
     end
 
-    def export_logfile(n_max=10000, filetype='CSV', filepath='./fiction_log.csv')
-      logs = self.generate_accesslog(n_max=10000)
+    def export_logfile(n=10000, filetype='CSV', filepath='./fiction_log.csv')
+      logs = self.generate_accesslog(n)
       headers = logs.first.keys
       if filetype == 'CSV'
         CSV.open(filepath, "wb") do |output|
