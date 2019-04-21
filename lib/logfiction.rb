@@ -113,7 +113,8 @@ module Logfiction
         @start_state, @transitions = start_state, taranstion
       else
         @start_state = state_transtion[:start_state]
-        @transitions = state_transtion[:states]
+        @transitions = state_transtion[:transitions]
+        states = state_transtion[:states]
       end
       # convert states
       states_hash = {}
@@ -346,6 +347,7 @@ module Logfiction
 
       n_row = 1
       while n_row < n_max
+        # only one time update each users in second loop 
         @users.each do |user|
           user_id = user[:user_id]
           n_actions = 0

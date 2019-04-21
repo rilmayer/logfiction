@@ -55,6 +55,58 @@ la.export_logfile(filetype='CSV',filepath='/path/to/file')
 #     2018-06-29 11:19:12 +0900,12,0,"",top_page_view
 ```
 
+## Advanced Usage
+```ruby
+require 'logfiction'
+
+assumtions = {
+    # Set the log start time to January 01, 2018 AM 9:00 AM
+    time_access_from: Time.parse("2018-01-01 09:00:00"),
+    
+    # Set session limit to 20
+    user_max_sessions: 20,
+
+    # Set action limit to 200
+    user_max_actions: 100,
+
+    # Set the number of generated users to 500
+    n_users: 500,
+
+    # Set the number of generated items to 200
+    n_items: 200
+}
+
+la = Logfiction::AccessLog.new(assumtions)
+
+# State and transition settings
+states = [
+    {state_id: 0, state_name: 'top_page_view', item_type: :no_item},
+    {state_id: 1, state_name: 'list_page_view', item_type: :many},
+    {state_id: 2, state_name: 'detail_page_view', item_type: :one},
+    {state_id: 3, state_name: 'item_purchase', item_type: :one}
+]
+
+transitions = [
+    {from: 0, to: 1, probability: 0.6, restriction: false},
+    {from: 1, to: 2, probability: 0.4, restriction: true},
+    {from: 2, to: 3, probability: 0.2, restriction: true, auto_transiton: 0}
+]
+
+states_transtions = {
+    start_state: [0],
+    states: states,
+    transitions: transitions
+}
+
+la.generate_state_transiton(states_transtions)
+
+# get logs
+logs = la.generate_accesslog(100)
+
+# export logs
+la.export_logfile(100, filetype='CSV',filepath="./fictionlog.csv")
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
